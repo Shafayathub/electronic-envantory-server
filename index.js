@@ -29,7 +29,7 @@ const run = async () => {
       res.send(result);
     });
     // get My Product
-    app.get('/product', async (req, res) => {
+    app.get('/myProduct', async (req, res) => {
       const email = req.query.email;
       const query = { email: email };
       const cursor = productCollection.find(query);
