@@ -27,6 +27,14 @@ const run = async () => {
       const result = await cursor.toArray();
       res.send(result);
     });
+    // get My Product
+    app.get('/product', async (req, res) => {
+      const email = req.query.email;
+      const query = { email: email };
+      const cursor = productCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
 
     // Particular service
     app.get('/product/:id', async (req, res) => {
