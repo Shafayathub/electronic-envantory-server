@@ -20,6 +20,7 @@ const run = async () => {
   try {
     await client.connect();
     const productCollection = client.db('envantory').collection('products');
+    const myProductCollection = client.db('envantory').collection('myProducts');
 
     app.get('/product', async (req, res) => {
       const query = {};
@@ -48,6 +49,12 @@ const run = async () => {
     app.post('/product', async (req, res) => {
       const newProduct = req.body;
       const result = await productCollection.insertOne(newProduct);
+      res.send(result);
+    });
+    // POST
+    app.post('/myProduct', async (req, res) => {
+      const newProduct = req.body;
+      const result = await myProductCollection.insertOne(newProduct);
       res.send(result);
     });
     // Update
