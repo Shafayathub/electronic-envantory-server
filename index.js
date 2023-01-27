@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
+// require("crypto").randomBytes(64).toString("hex")
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 
@@ -63,6 +65,14 @@ const run = async () => {
       const newProduct = req.body;
       const result = await myProductCollection.insertOne(newProduct);
       res.send(result);
+    });
+    // POST AUTH
+    app.post('/login', async (req, res) => {
+      const user = user.body;
+      const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: '1d',
+      });
+      res.send(accessToken);
     });
     // Update
     app.put('/product/:id', async (req, res) => {
