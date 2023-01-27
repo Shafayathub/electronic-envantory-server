@@ -25,8 +25,8 @@ const verifyJWT = (req, res, next) => {
     }
     console.log('Decoded', decoded);
     req.decoded = decoded;
+    next();
   });
-  next();
 };
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@clusterenvantory.w8qznwv.mongodb.net/?retryWrites=true&w=majority`;
