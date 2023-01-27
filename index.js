@@ -12,6 +12,12 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+const verifyJWT = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  console.log('inside verifyJWT', authHeader);
+  next();
+};
+
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@clusterenvantory.w8qznwv.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
@@ -31,7 +37,7 @@ const run = async () => {
       res.send(result);
     });
     // get My Product
-    app.get('/myProduct', async (req, res) => {
+    app.get('/myProduct', verifyJWT, async (req, res) => {
       const email = req.query.email;
       const query = { email: email };
       const cursor = myProductCollection.find(query);
