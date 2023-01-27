@@ -37,11 +37,18 @@ const run = async () => {
       res.send(result);
     });
 
-    // Particular service
+    // Particular Product
     app.get('/product/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const product = await productCollection.findOne(query);
+      res.send(product);
+    });
+    // Particular My Product
+    app.get('/myProduct/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const product = await myProductCollection.findOne(query);
       res.send(product);
     });
 
@@ -78,6 +85,12 @@ const run = async () => {
     //Delete
     app.delete('/product/:id', async (req, res) => {
       const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await productCollection.deleteOne(query);
+      res.send(result);
+    });
+    app.delete('/myProduct', async (req, res) => {
+      const email = req.query.email;
       const query = { _id: ObjectId(id) };
       const result = await productCollection.deleteOne(query);
       res.send(result);
