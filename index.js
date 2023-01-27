@@ -12,9 +12,20 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+// Jwt verify
 const verifyJWT = (req, res, next) => {
   const authHeader = req.headers.authorization;
-  console.log('inside verifyJWT', authHeader);
+  if (!authHeader) {
+    return res.status(401).send({ message: 'Unauthorized Access' });
+  }
+  const token = authHeader.split(' ')[1];
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(403).send({ message: 'Forbidden' });
+    }
+    console.log('Decoded', decoded);
+    req.decoded = decoded;
+  });
   next();
 };
 
@@ -38,11 +49,16 @@ const run = async () => {
     });
     // get My Product
     app.get('/myProduct', verifyJWT, async (req, res) => {
+      const decodedEmail = req.decoded.email;
       const email = req.query.email;
-      const query = { email: email };
-      const cursor = myProductCollection.find(query);
-      const result = await cursor.toArray();
-      res.send(result);
+      if (decodedEmail == email) {
+        const query = { email: email };
+        const cursor = myProductCollection.find(query);
+        const result = await cursor.toArray();
+        res.send(result);
+      } else {
+        return res.status(403).send({ message: 'Forbidden' });
+      }
     });
 
     // Particular Product
